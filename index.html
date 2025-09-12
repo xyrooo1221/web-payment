@@ -34,6 +34,12 @@
             box-shadow: 0 15px 35px rgba(0, 0, 100, 0.5);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(100, 150, 255, 0.3);
+            animation: fadeIn 1s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         header {
@@ -49,6 +55,13 @@
             overflow: hidden;
             border: 3px solid #00a3ff;
             box-shadow: 0 0 20px #0084ff;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 20px #0084ff; }
+            50% { box-shadow: 0 0 30px #0084ff, 0 0 40px #0084ff; }
+            100% { box-shadow: 0 0 20px #0084ff; }
         }
         
         .logo img {
@@ -253,6 +266,12 @@
             color: #4db8ff;
         }
         
+        .music-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        
         .music-btn {
             background: linear-gradient(135deg, #007cf0, #00dfd8);
             color: white;
@@ -277,6 +296,24 @@
             font-size: 0.9rem;
         }
         
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            background: rgba(20, 40, 80, 0.9);
+            color: #4db8ff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transform: translateX(100%);
+            transition: transform 0.3s ease-out;
+            z-index: 1000;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
         @media (max-width: 768px) {
             .payment-options {
                 grid-template-columns: 1fr;
@@ -296,7 +333,7 @@
     <div class="container">
         <header>
             <div class="logo">
-                <img src="https://files.catbox.moe/ris0pu.jpg" alt="Logo Payment">
+                <img src="https://files.catbox.moe/0sok3t.jpg" alt="Logo Payment">
             </div>
             <h1>PAYMENT GATEWAY</h1>
             <p class="description">Lakukan pembayaran dengan metode yang tersedia di bawah ini</p>
@@ -348,7 +385,7 @@
         </div>
         
         <div class="action-buttons">
-            <button class="btn pay-btn" onclick="alert('Terima kasih! Silakan lakukan pembayaran.')">
+            <button class="btn pay-btn" onclick="showNotification('Terima kasih! Silakan lakukan pembayaran.')">
                 <i class="fas fa-check-circle"></i>&nbsp; Konfirmasi Pembayaran
             </button>
             <button class="btn instruction-btn" onclick="showInstructions()">
@@ -358,9 +395,14 @@
         
         <div class="music-player">
             <h3 class="music-title">Dengarkan Musik Selagi Menunggu</h3>
-            <button class="music-btn" onclick="playMusic()">
-                <i class="fas fa-play"></i>&nbsp; Putar Musik
-            </button>
+            <div class="music-controls">
+                <button class="music-btn" onclick="playMusic()">
+                    <i class="fas fa-play"></i>&nbsp; Putar Musik
+                </button>
+                <button class="music-btn" onclick="pauseMusic()">
+                    <i class="fas fa-pause"></i>&nbsp; Jeda
+                </button>
+            </div>
         </div>
     </div>
     
@@ -368,23 +410,58 @@
         <p>&copy; 2023 Payment Gateway. All rights reserved.</p>
     </footer>
 
+    <div id="notification" class="notification">
+        <i class="fas fa-check-circle"></i> <span id="notification-text"></span>
+    </div>
+
+    <iframe id="youtube-player" style="display: none;" width="0" height="0" src="https://www.youtube.com/embed/XY3-8xAeqYM?autoplay=1&mute=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
     <script>
+        // Fungsi untuk menyalin teks ke clipboard
         function copyText(elementId) {
             const text = document.getElementById(elementId).innerText;
             navigator.clipboard.writeText(text).then(() => {
-                alert('Teks berhasil disalin: ' + text);
+                showNotification('Teks berhasil disalin: ' + text);
             }).catch(err => {
                 console.error('Gagal menyalin teks: ', err);
             });
         }
         
+        // Fungsi untuk menampilkan petunjuk pembayaran
         function showInstructions() {
-            alert("Cara Pembayaran:\n1. Salin nomor atau scan QRIS\n2. Transfer sesuai jumlah pembayaran\n3. Klik tombol 'Konfirmasi Pembayaran'\n4. Tunggu verifikasi dari kami");
+            showNotification("Cara Pembayaran: 1. Salin nomor/scan QRIS 2. Transfer sesuai jumlah 3. Klik konfirmasi");
         }
         
+        // Fungsi untuk mengontrol musik
         function playMusic() {
-            window.open("https://youtube.com/channel/UCIaLsU0LfScJ4kxgXkV4HqA", "_blank");
+            const iframe = document.getElementById('youtube-player');
+            iframe.src = "https://www.youtube.com/embed/XY3-8xAeqYM?autoplay=1";
+            showNotification('Memutar musik...');
         }
+        
+        function pauseMusic() {
+            const iframe = document.getElementById('youtube-player');
+            iframe.src = "";
+            showNotification('Musik dihentikan');
+        }
+        
+        // Fungsi untuk menampilkan notifikasi
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notification-text');
+            
+            notificationText.innerText = message;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Memutar musik otomatis saat halaman dimuat
+        window.onload = function() {
+            playMusic();
+        };
     </script>
 </body>
 </html>
