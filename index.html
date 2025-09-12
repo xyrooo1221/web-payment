@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Gateway - DANA, GoPay, OVO, QRIS</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        :root {
+            --primary: #6a5af9;
+            --secondary: #d66efd;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #28a745;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --info: #17a2b8;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .payment-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 30px;
+        }
+
+        .payment-card {
+            background: var(--light);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .payment-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--primary);
+        }
+
+        .payment-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .payment-card.dana::before {
+            background: #0080ff;
+        }
+
+        .payment-card.gopay::before {
+            background: #00a650;
+        }
+
+        .payment-card.ovo::before {
+            background: #4c2a86;
+        }
+
+        .payment-card.qris::before {
+            background: #ff9e02;
+        }
+
+        .payment-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+
+        .dana .payment-icon {
+            color: #0080ff;
+        }
+
+        .gopay .payment-icon {
+            color: #00a650;
+        }
+
+        .ovo .payment-icon {
+            color: #4c2a86;
+        }
+
+        .qris .payment-icon {
+            color: #ff9e02;
+        }
+
+        .payment-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+
+        .payment-info {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .payment-info p {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            word-break: break-all;
+        }
+
+        .copy-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        .copy-btn:hover {
+            background: var(--secondary);
+        }
+
+        .qris-image {
+            width: 100%;
+            max-width: 200px;
+            height: auto;
+            margin: 15px auto;
+            display: block;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: var(--light);
+            color: var(--dark);
+            font-size: 0.9rem;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            background: var(--success);
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transform: translateX(100%);
+            opacity: 0;
+            transition: transform 0.5s ease, opacity 0.5s ease;
+            z-index: 1000;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+            .payment-methods {
+                grid-template-columns: 1fr;
+            }
+            
+            header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Payment Gateway</h1>
+            <p>Pilih metode pembayaran yang Anda inginkan</p>
+        </header>
+        
+        <div class="payment-methods">
+            <div class="payment-card dana">
+                <i class="payment-icon fas fa-money-bill-wave"></i>
+                <h3>DANA</h3>
+                <div class="payment-info">
+                    <p id="dana-number">083851270439</p>
+                    <button class="copy-btn" onclick="copyToClipboard('dana-number')">Salin Nomor</button>
+                </div>
+            </div>
+            
+            <div class="payment-card gopay">
+                <i class="payment-icon fas fa-wallet"></i>
+                <h3>GoPay</h3>
+                <div class="payment-info">
+                    <p id="gopay-number">083805385608</p>
+                    <button class="copy-btn" onclick="copyToClipboard('gopay-number')">Salin Nomor</button>
+                </div>
+            </div>
+            
+            <div class="payment-card ovo">
+                <i class="payment-icon fas fa-mobile-alt"></i>
+                <h3>OVO</h3>
+                <div class="payment-info">
+                    <p id="ovo-number">083805385608</p>
+                    <button class="copy-btn" onclick="copyToClipboard('ovo-number')">Salin Nomor</button>
+                </div>
+            </div>
+            
+            <div class="payment-card qris">
+                <i class="payment-icon fas fa-qrcode"></i>
+                <h3>QRIS</h3>
+                <div class="payment-info">
+                    <img src="link_foto" alt="QR Code" class="qris-image" onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=ExampleQRCodeData'">
+                    <p>Scan QR Code di atas</p>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>&copy; 2023 Payment Gateway. Semua hak dilindungi.</p>
+        </footer>
+    </div>
+    
+    <div class="notification" id="notification">
+        Nomor berhasil disalin!
+    </div>
+
+    <script>
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            const text = element.textContent || element.innerText;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                showNotification();
+            }).catch(err => {
+                console.error('Gagal menyalin teks: ', err);
+            });
+        }
+        
+        function showNotification() {
+            const notification = document.getElementById('notification');
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
