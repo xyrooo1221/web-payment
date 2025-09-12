@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Payment Gateway</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -13,181 +14,206 @@
         }
         
         body {
-            background-image: url('https://files.catbox.moe/gjfejp.jpg');
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://files.catbox.moe/gjfejp.jpg') no-repeat center center fixed;
             background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
             color: #fff;
             min-height: 100vh;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
+            justify-content: center;
             padding: 20px;
-        }
-        
-        .overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 40, 0.7);
-            z-index: -1;
         }
         
         .container {
             width: 100%;
-            max-width: 500px;
-            background: rgba(0, 10, 50, 0.8);
-            backdrop-filter: blur(10px);
+            max-width: 800px;
+            background: rgba(15, 25, 45, 0.85);
             border-radius: 20px;
             padding: 30px;
-            box-shadow: 0 15px 35px rgba(0, 80, 255, 0.3);
-            border: 1px solid rgba(0, 150, 255, 0.3);
+            box-shadow: 0 15px 35px rgba(0, 0, 100, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(100, 150, 255, 0.3);
         }
         
-        .header {
+        header {
             text-align: center;
             margin-bottom: 30px;
         }
         
-        .header h1 {
-            font-size: 28px;
-            margin-bottom: 10px;
-            background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 10px rgba(0, 150, 255, 0.5);
-        }
-        
-        .header p {
-            color: #a0d2ff;
-            font-size: 14px;
-        }
-        
-        .payment-option {
-            background: rgba(0, 30, 70, 0.5);
-            border-radius: 15px;
-            padding: 15px;
-            margin-bottom: 20px;
-            border: 1px solid rgba(0, 150, 255, 0.2);
-            transition: all 0.3s ease;
-        }
-        
-        .payment-option:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0, 100, 255, 0.4);
-            border-color: rgba(0, 200, 255, 0.5);
-        }
-        
-        .payment-option h3 {
-            color: #4facfe;
-            margin-bottom: 10px;
-            font-size: 18px;
-            display: flex;
-            align-items: center;
-        }
-        
-        .payment-option h3 i {
-            margin-right: 10px;
-            font-size: 24px;
-        }
-        
-        .payment-number {
-            background: rgba(0, 50, 100, 0.3);
-            padding: 12px;
-            border-radius: 10px;
-            font-size: 16px;
-            letter-spacing: 1px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 10px;
-        }
-        
-        .copy-btn {
-            background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
-            border: none;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .copy-btn:hover {
-            box-shadow: 0 0 15px rgba(0, 200, 255, 0.8);
-        }
-        
-        .qris-section {
-            text-align: center;
-            margin: 30px 0;
-        }
-        
-        .qris-section h3 {
-            color: #4facfe;
-            margin-bottom: 15px;
-        }
-        
-        .qris-img {
-            width: 200px;
-            height: 200px;
-            border-radius: 15px;
+        .logo {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 15px;
+            border-radius: 50%;
             overflow: hidden;
-            margin: 0 auto;
-            border: 2px solid rgba(0, 150, 255, 0.5);
-            box-shadow: 0 0 20px rgba(0, 100, 255, 0.5);
+            border: 3px solid #00a3ff;
+            box-shadow: 0 0 20px #0084ff;
         }
         
-        .qris-img img {
+        .logo img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
         
-        .music-player {
-            margin-top: 30px;
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #4db8ff;
+            text-shadow: 0 0 10px rgba(77, 184, 255, 0.7);
+        }
+        
+        .description {
+            color: #a0d0ff;
+            margin-bottom: 30px;
             text-align: center;
         }
         
-        .play-btn {
-            background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
-            border: none;
-            color: white;
-            padding: 12px 30px;
-            border-radius: 50px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
-            box-shadow: 0 0 20px rgba(0, 100, 255, 0.5);
+        .payment-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
         }
         
-        .play-btn:before {
+        .payment-method {
+            background: rgba(20, 40, 80, 0.7);
+            border-radius: 15px;
+            padding: 20px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid rgba(100, 150, 255, 0.2);
+        }
+        
+        .payment-method:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 132, 255, 0.4);
+        }
+        
+        .method-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .method-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #007cf0, #00dfd8);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+        
+        .method-icon i {
+            font-size: 20px;
+            color: white;
+        }
+        
+        .method-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #4db8ff;
+        }
+        
+        .method-details {
+            margin-top: 10px;
+        }
+        
+        .method-details p {
+            margin: 8px 0;
+            color: #cce6ff;
+            font-size: 1rem;
+        }
+        
+        .copy-btn {
+            background: rgba(0, 132, 255, 0.2);
+            border: none;
+            color: #4db8ff;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: all 0.3s;
+        }
+        
+        .copy-btn:hover {
+            background: rgba(0, 132, 255, 0.4);
+        }
+        
+        .qris-section {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(20, 40, 80, 0.7);
+            border-radius: 15px;
+        }
+        
+        .qris-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #4db8ff;
+        }
+        
+        .qris-image {
+            width: 250px;
+            height: 250px;
+            margin: 0 auto;
+            border: 2px solid #00a3ff;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 132, 255, 0.5);
+        }
+        
+        .qris-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 15px 30px;
+            border-radius: 50px;
+            border: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .pay-btn {
+            background: linear-gradient(135deg, #007cf0, #00dfd8);
+            color: white;
+            box-shadow: 0 0 15px rgba(0, 132, 255, 0.7);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .pay-btn::before {
             content: '';
             position: absolute;
             top: -50%;
             left: -50%;
             width: 200%;
             height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
-            transform: rotate(45deg);
-            transition: all 0.5s ease;
-            z-index: -1;
+            background: linear-gradient(rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0));
+            transform: rotate(-45deg);
+            animation: shine 3s infinite;
         }
         
-        .play-btn:hover {
-            box-shadow: 0 0 30px rgba(0, 200, 255, 0.8);
-            transform: scale(1.05);
-        }
-        
-        .play-btn:hover:before {
-            animation: lighting 1s linear;
-        }
-        
-        @keyframes lighting {
+        @keyframes shine {
             0% {
                 left: -50%;
             }
@@ -196,77 +222,168 @@
             }
         }
         
-        .footer {
-            text-align: center;
+        .pay-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(0, 132, 255, 0.9);
+        }
+        
+        .instruction-btn {
+            background: transparent;
+            color: #4db8ff;
+            border: 2px solid #00a3ff;
+        }
+        
+        .instruction-btn:hover {
+            background: rgba(0, 132, 255, 0.1);
+        }
+        
+        .music-player {
             margin-top: 30px;
-            color: #a0d2ff;
-            font-size: 12px;
+            text-align: center;
+            padding: 15px;
+            background: rgba(20, 40, 80, 0.7);
+            border-radius: 15px;
+            width: 100%;
+            max-width: 500px;
+        }
+        
+        .music-title {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: #4db8ff;
+        }
+        
+        .music-btn {
+            background: linear-gradient(135deg, #007cf0, #00dfd8);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: 0 0 15px rgba(0, 132, 255, 0.5);
+            transition: all 0.3s;
+        }
+        
+        .music-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(0, 132, 255, 0.7);
+        }
+        
+        footer {
+            margin-top: 30px;
+            text-align: center;
+            color: #a0d0ff;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .payment-options {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
         }
     </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <div class="overlay"></div>
-    
     <div class="container">
-        <div class="header">
-            <h1>Payment Gateway</h1>
-            <p>Silakan pilih metode pembayaran yang Anda inginkan</p>
-        </div>
-        
-        <div class="payment-option">
-            <h3><i class="fas fa-wallet"></i> DANA</h3>
-            <div class="payment-number">
-                <span>083851270439</span>
-                <button class="copy-btn" onclick="copyText('083851270439')">Salin</button>
+        <header>
+            <div class="logo">
+                <img src="https://files.catbox.moe/ris0pu.jpg" alt="Logo Payment">
             </div>
-        </div>
+            <h1>PAYMENT GATEWAY</h1>
+            <p class="description">Lakukan pembayaran dengan metode yang tersedia di bawah ini</p>
+        </header>
         
-        <div class="payment-option">
-            <h3><i class="fab fa-google-wallet"></i> GOPAY</h3>
-            <div class="payment-number">
-                <span>083805385608</span>
-                <button class="copy-btn" onclick="copyText('083805385608')">Salin</button>
+        <div class="payment-options">
+            <div class="payment-method">
+                <div class="method-header">
+                    <div class="method-icon">
+                        <i class="fas fa-wallet"></i>
+                    </div>
+                    <h3 class="method-title">DANA</h3>
+                </div>
+                <div class="method-details">
+                    <p>Nomor: <span id="dana-number">083851270439</span> <button class="copy-btn" onclick="copyText('dana-number')"><i class="fas fa-copy"></i></button></p>
+                </div>
             </div>
-        </div>
-        
-        <div class="payment-option">
-            <h3><i class="fas fa-mobile-alt"></i> OVO</h3>
-            <div class="payment-number">
-                <span>083805385608</span>
-                <button class="copy-btn" onclick="copyText('083805385608')">Salin</button>
+            
+            <div class="payment-method">
+                <div class="method-header">
+                    <div class="method-icon">
+                        <i class="fab fa-google-wallet"></i>
+                    </div>
+                    <h3 class="method-title">GOPAY</h3>
+                </div>
+                <div class="method-details">
+                    <p>Nomor: <span id="gopay-number">083805385608</span> <button class="copy-btn" onclick="copyText('gopay-number')"><i class="fas fa-copy"></i></button></p>
+                </div>
+            </div>
+            
+            <div class="payment-method">
+                <div class="method-header">
+                    <div class="method-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3 class="method-title">OVO</h3>
+                </div>
+                <div class="method-details">
+                    <p>Nomor: <span id="ovo-number">083805385608</span> <button class="copy-btn" onclick="copyText('ovo-number')"><i class="fas fa-copy"></i></button></p>
+                </div>
             </div>
         </div>
         
         <div class="qris-section">
-            <h3>QRIS</h3>
-            <div class="qris-img">
-                <img src="https://files.catbox.moe/f7upxl.jpg" alt="QR Code">
+            <h3 class="qris-title">QRIS Payment</h3>
+            <div class="qris-image">
+                <img src="https://files.catbox.moe/0sok3t.jpg" alt="QR Code">
             </div>
         </div>
         
-        <div class="music-player">
-            <button class="play-btn" onclick="playMusic()">
-                <i class="fas fa-play"></i> Putar Musik
+        <div class="action-buttons">
+            <button class="btn pay-btn" onclick="alert('Terima kasih! Silakan lakukan pembayaran.')">
+                <i class="fas fa-check-circle"></i>&nbsp; Konfirmasi Pembayaran
+            </button>
+            <button class="btn instruction-btn" onclick="showInstructions()">
+                <i class="fas fa-info-circle"></i>&nbsp; Petunjuk Pembayaran
             </button>
         </div>
         
-        <div class="footer">
-            <p>© 2023 Payment Gateway. Terima kasih telah berbelanja.</p>
+        <div class="music-player">
+            <h3 class="music-title">Dengarkan Musik Selagi Menunggu</h3>
+            <button class="music-btn" onclick="playMusic()">
+                <i class="fas fa-play"></i>&nbsp; Putar Musik
+            </button>
         </div>
     </div>
+    
+    <footer>
+        <p>&copy; 2023 Payment Gateway. All rights reserved.</p>
+    </footer>
 
     <script>
-        function copyText(text) {
+        function copyText(elementId) {
+            const text = document.getElementById(elementId).innerText;
             navigator.clipboard.writeText(text).then(() => {
-                alert('Nomor berhasil disalin: ' + text);
+                alert('Teks berhasil disalin: ' + text);
             }).catch(err => {
                 console.error('Gagal menyalin teks: ', err);
             });
         }
         
+        function showInstructions() {
+            alert("Cara Pembayaran:\n1. Salin nomor atau scan QRIS\n2. Transfer sesuai jumlah pembayaran\n3. Klik tombol 'Konfirmasi Pembayaran'\n4. Tunggu verifikasi dari kami");
+        }
+        
         function playMusic() {
-            window.open('https://youtube.com/channel/UCIaLsU0LfScJ4kxgXkV4HqA', '_blank');
+            window.open("https://youtube.com/channel/UCIaLsU0LfScJ4kxgXkV4HqA", "_blank");
         }
     </script>
 </body>
