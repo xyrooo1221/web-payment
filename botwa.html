@@ -1,0 +1,130 @@
+const { Client, LocalAuth } = require('whatsapp-web.js');
+const qrcode = require('qrcode-terminal');
+
+// Inisialisasi client WhatsApp
+const client = new Client({
+    authStrategy: new LocalAuth()
+});
+
+// Generate QR Code untuk login
+client.on('qr', qr => {
+    qrcode.generate(qr, {small: true});
+    console.log('Scan QR code di atas dengan WhatsApp Anda');
+});
+
+// Bot siap menerima pesan
+client.on('ready', () => {
+    console.log('Bot Top Up Al Konek sudah siap!');
+});
+
+// Handle pesan masuk
+client.on('message', async message => {
+    const text = message.body.toLowerCase() || '';
+    const sender = message.from;
+    
+    // Jika pesan adalah perintah bantuan
+    if (text === '!menu' || text === '!help') {
+        message.reply(`
+🤖 *BOT TOP UP AL KONEK* 🤖
+
+Berikut perintah yang tersedia:
+- *!menu* : Menampilkan menu bantuan
+- *!topup* : Memulai proses top up
+- *!cekstatus* : Cek status transaksi terakhir
+- *!kontak* : Hubungi admin
+
+Contoh: ketik *!topup* untuk mulai top up
+        `);
+    }
+    
+    // Jika pesan adalah perintah topup
+    else if (text === '!topup') {
+        message.reply(`
+💵 *TOP UP AL KONEK* 💵
+
+Silakan pilih jenis top up:
+1. Pulsa Reguler
+2. Paket Data
+3. Token Listrik
+4. Voucher Game
+
+Balas dengan angka pilihan Anda (contoh: 1)
+        `);
+    }
+    
+    // Handle pilihan top up
+    else if (text.match(/^[1-4]$/)) {
+        const pilihan = parseInt(text);
+        const jenisTopUp = [
+            'Pulsa Reguler',
+            'Paket Data', 
+            'Token Listrik',
+            'Voucher Game'
+        ][pilihan - 1];
+        
+        message.reply(`Anda memilih: *${jenisTopUp}*
+        
+Silakan ketik nomor tujuan (contoh: 081234567890)`);
+    }
+    
+    // Jika menerima nomor telepon (format sederhana)
+    else if (text.match(/^08[0-9]{8,11}$/)) {
+        message.reply(`Nomor tujuan: *${text}*
+        
+Silakan ketik nominal top up (contoh: 50000)`);
+    }
+    
+    // Jika menerima nominal (angka)
+    else if (text.match(/^[0-9]+$/)) {
+        const nominal = parseInt(text);
+        message.reply(`Nominal: *Rp ${nominal.toLocaleString('id-ID')}*
+        
+Konfirmasi top up?
+Balas *YA* untuk konfirmasi atau *BATAL* untuk membatalkan`);
+    }
+    
+    // Konfirmasi transaksi
+    else if (text === 'ya') {
+        message.reply(`🚀 Memproses top up Anda...
+        
+Transaksi sedang diproses. Mohon tunggu sebentar.`);
+        
+        // Simulasi proses top up (ganti dengan integrasi API sebenarnya)
+        setTimeout(() => {
+            message.reply(`✅ *TOP UP BERHASIL!*
+            
+Detail transaksi:
+- Jenis: Pulsa Reguler
+- Nomor: 081234567890
+- Nominal: Rp 50.000
+- Biaya: Rp 50.000
+- Status: Berhasil
+
+Terima kasih telah menggunakan layanan Top Up Al Konek!`);
+        }, 3000);
+    }
+    
+    // Batalkan transaksi
+    else if (text === 'batal') {
+        message.reply('❌ Transaksi dibatalkan. Ketik *!topup* untuk memulai lagi.');
+    }
+    
+    // Perintah cek status
+    else if (text === '!cekstatus') {
+        message.reply('Fitur cek status sedang dalam pengembangan.');
+    }
+    
+    // Perintah kontak admin
+    else if (text === '!kontak') {
+        message.reply(`📞 *Hubungi Admin*
+        
+Untuk pertanyaan atau bantuan lebih lanjut, hubungi:
+- Admin 1: 081234567890
+- Admin 2: 087654321098
+
+Terima kasih!`);
+    }
+});
+
+// Start client
+client.initialize();
